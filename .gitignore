@@ -95,8 +95,21 @@ docs/_build/
 # PyBuilder
 target/
 
+# MacOS
+.DS_Store
+
+# PyCharm
+.idea
+
+# VSCode
+.vscode/
+
 # Jupyter Notebook
-.ipynb_checkpoints
+.ipynb_checkpoints/
+
+# vim
+*.swp
+*.swo
 
 # IPython
 profile_default/
@@ -148,3 +161,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Antlr
+.antlr/
+antlr4_artifacts/
+
+# Application logs
+log/
+logs/
