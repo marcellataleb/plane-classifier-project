@@ -1,5 +1,5 @@
 # No weight files to repo
-*.m5
+*.h5
 
 # Credentials files, secrets, confidential directory
 confidential/
