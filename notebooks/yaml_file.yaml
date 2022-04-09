@@ -1,0 +1,10 @@
+---
+
+image:
+  height: 128
+  width: 128
+  depth: 3
+
+dir:
+  model: '/content/drive/MyDrive/Projet - Hervé Mignot/model/model'
+  data: 'dataset/data'
