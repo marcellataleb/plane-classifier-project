@@ -9,6 +9,8 @@ import yaml
 import keras 
 import pandas as pd 
 
+pip install --upgrade pip
+
 # Importation du fichier yaml 
 with open('app.yaml') as yaml_data:
     params = yaml.safe_load(yaml_data)
