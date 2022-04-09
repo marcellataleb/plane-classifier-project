@@ -1,0 +1,10 @@
+---
+
+image:
+  height: 128
+  width: 128
+  depth: 3
+
+dir:
+  model: 'models/manufacturer.h5'
+  data: 'dataset/data'
