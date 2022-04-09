@@ -1,10 +1,10 @@
 pathlib
 matplotlib.pyplot
-numpy
-pandas
+numpy==1.20.2
+pandas==1.2.4
 tensorflow
 seaborn
-streamlit
+streamlit==0.81.0
 PIL
 keras.models
 keras.layers
