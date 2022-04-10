@@ -1,0 +1,13 @@
+image:
+  height: 128
+  width: 128
+  depth: 3
+
+dir:
+  model: 'models'
+  data: 'dataset/data'
+
+target: 
+    - manufacturer
+    - family
+    - variant

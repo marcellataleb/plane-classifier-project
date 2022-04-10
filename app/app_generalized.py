@@ -1,0 +1,120 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import streamlit as st
+import tensorflow as tf
+import pathlib
+from PIL import Image
+import seaborn as sns 
+import yaml
+import keras 
+import pandas as pd 
+    
+# Importation du fichier yaml 
+with open('app_generalized.yaml') as yaml_data:
+    params = yaml.safe_load(yaml_data)
+
+# Création des constantes 
+IMAGE_HEIGHT = params['image']['height']
+IMAGE_WIDTH = params['image']['width']
+IMAGE_DEPTH = params['image']['depth']
+TARGET_NAME = params['target']
+MODEL_DIR = pathlib.Path(params['dir']['model'])
+          
+
+def load_image(path):
+    """Load an image as numpy array
+    """
+    return plt.imread(path)
+    
+
+def predict_image(path, model):
+    """Predict plane identification from image.
+    
+    Parameters
+    ----------
+    path (Path): path to image to identify
+    model (keras.models): Keras model to be used for prediction
+    
+    Returns
+    -------
+    Predicted class
+    """
+    images = np.array([np.array(Image.open(path).resize((IMAGE_WIDTH, IMAGE_HEIGHT)))])
+    print(images.shape)
+    prediction_vector = model.predict(images)
+    predicted_classes = np.argmax(prediction_vector, axis=1)
+    return predicted_classes[0]
+
+def proba(path, model):
+    """Compute the probability of prediction plane identification from image.
+    
+    Parameters
+    ----------
+    path (Path): path to image to identify
+    model (keras.models): Keras model to be used for prediction
+    
+    Returns
+    -------
+    Probability of model prediction
+    """
+    images = np.array([np.array(Image.open(path).resize((IMAGE_WIDTH, IMAGE_HEIGHT)))])
+    print(images.shape)
+    prediction_vector = model.predict(images)
+    prediction_proba = max(prediction_vector)
+    return prediction_proba[0]
+
+def barplotting(path, model):
+    """Show probability of prediction plane identification in a bar chart.
+    
+    Parameters
+    ----------
+    path (Path): path to image to identify
+    model (keras.models): Keras model to be used for prediction
+    
+    Returns
+    -------
+    Probability of model prediction
+    """
+    images = np.array([np.array(Image.open(path).resize((IMAGE_WIDTH, IMAGE_HEIGHT)))])
+    # print(images.shape)
+    prediction_vector = model.predict(images)
+    predicted_classes = np.argmax(prediction_vector, axis=1)[0]
+    st.bar_chart(prediction_vector.T)
+    # return barplot
+
+st.title("Identification d'avion")
+
+def load_model(path):
+    """Load tf/Keras model for prediction
+    """
+    return tf.keras.models.load_model(path)
+
+uploaded_file = st.file_uploader("Charger une image d'avion") #, accept_multiple_files=True)#
+
+if uploaded_file:
+    loaded_image = load_image(uploaded_file)
+    st.image(loaded_image)
+
+option = st.selectbox(
+    "Choisir une forme d'identification",
+    (None, TARGET_NAME[0], TARGET_NAME[1], TARGET_NAME[2]))
+
+if option is not None:
+    st.write('Option choisie :', option) 
+    model = load_model(MODEL_DIR / f'{option}.h5')
+    model.summary()
+        
+predict_btn = st.button("Identifier", disabled=(option is None))
+if predict_btn:
+    prediction = predict_image(uploaded_file, model)
+    st.write(f"C'est un : {prediction}")
+    # Exemple si les f-strings ne sont pas dispo.
+    #st.write("C'est un : {}".format(prediction)
+    # Afficher la probabilité de la prédiction du modèle
+    probability = proba(uploaded_file, model)
+    st.write(f"La probabilité associée à la prédiction du modèle est de : {probability}")
+
+barchat_btn = st.button("Afficher les probabilités", disabled=(uploaded_file is None))
+if barchat_btn:
+    st.write(f"La probabilité associée à la prédiction du modèle est de")
+    graph=barplotting(uploaded_file, model)
